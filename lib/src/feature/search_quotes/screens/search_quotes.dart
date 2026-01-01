@@ -65,27 +65,25 @@ class SearchQuotes extends StatelessWidget {
                 );
               }
 
-              if (state is QuotesLoadedState) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: state.quotes.length,
-                    itemBuilder: (context, index) {
-                      final quote = state.quotes[index];
-                      return QuotesCard(
-                        quote: quote,
-                        onSave: () {
-                          context.read<QuotesBloc>().add(
-                            SaveRemoveQuotesEvent(quote),
-                          );
-                        },
-                        onShare: () {},
-                      );
-                    },
-                  ),
-                );
-              }
-
-              return const Center(child: Text('Type to search'));
+              // if (state is QuotesLoadedState) {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: state.quotes.length,
+                  itemBuilder: (context, index) {
+                    final quote = state.quotes[index];
+                    return QuotesCard(
+                      quote: quote,
+                      onSave: () {
+                        context.read<QuotesBloc>().add(
+                          SaveRemoveQuotesEvent(quote),
+                        );
+                      },
+                      onShare: () {},
+                    );
+                  },
+                ),
+              );
+              // }
             },
           ),
         ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quotes_app_bloc/src/utils/utils.dart';
 
-import '../model/quote_model.dart';
+import '../../../model/quote_model.dart';
 
 class QuotesCard extends StatelessWidget {
   const QuotesCard({

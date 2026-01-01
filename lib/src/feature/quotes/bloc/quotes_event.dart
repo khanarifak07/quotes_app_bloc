@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:quotes_app_bloc/src/feature/quotes/model/quote_model.dart';
+import 'package:quotes_app_bloc/src/model/quote_model.dart';
 
 abstract class QuotesEvent extends Equatable {
   @override
@@ -24,12 +23,4 @@ class SaveRemoveQuotesEvent extends QuotesEvent {
 
   @override
   List<Object?> get props => [];
-}
-
-class ShareQuoteEvent extends QuotesEvent {
-  final GlobalKey globalKey;
-  ShareQuoteEvent({required this.globalKey});
-
-  @override
-  List<Object?> get props => [globalKey];
 }

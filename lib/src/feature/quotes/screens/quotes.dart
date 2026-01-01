@@ -1,14 +1,9 @@
-import 'dart:io';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:quotes_app_bloc/src/feature/quotes/bloc/quotes_bloc.dart';
 import 'package:quotes_app_bloc/src/feature/quotes/bloc/quotes_event.dart';
 import 'package:quotes_app_bloc/src/feature/quotes/bloc/quotes_state.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:quotes_app_bloc/src/utils/utils.dart';
 
 import '../widgets/quotes_card.dart';
 
@@ -34,31 +29,6 @@ class _QuotesState extends State<Quotes> {
         _scrollController.position.maxScrollExtent - 200) {
       context.read<QuotesBloc>().add(GetAllQuotesByPaginationEvent());
     }
-  }
-
-  void shareQuote(GlobalKey key) async {
-    //wait till frame is fully painted
-    await WidgetsBinding.instance.endOfFrame;
-    //find the widget to take a picture of by quotekey
-    final boundry =
-        key.currentContext?.findRenderObject() as RenderRepaintBoundary;
-    //take the screenshot of the widget
-    final image = await boundry.toImage(pixelRatio: 3.0);
-    //turn the photo into pngByte
-    final byteData = await image.toByteData(format: ImageByteFormat.png);
-    //get rawBytes from the image
-    final pngByte = byteData!.buffer.asUint8List();
-    //find the place to save the image
-    final directory = await getTemporaryDirectory();
-    //decide the filename
-    final filePath = '${directory.path}/quotes.png';
-    //save the image on the phone
-    final file = File(filePath);
-    file.writeAsBytes(pngByte);
-    //share the image
-    SharePlus.instance.share(
-      ShareParams(files: [XFile(filePath)], text: 'Check out this quote!!'),
-    );
   }
 
   @override
@@ -92,9 +62,7 @@ class _QuotesState extends State<Quotes> {
                       );
                     },
                     onShare: () {
-                      context.read<QuotesBloc>().add(
-                        ShareQuoteEvent(globalKey: shareQuoteKey),
-                      );
+                      Utils.shareQuote(shareQuoteKey);
                     },
                   ),
                 );

@@ -1,23 +1,20 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
-import 'quotes_event.dart';
-import 'quotes_state.dart';
-import '../model/quote_model.dart';
-import '../../../services/api_service.dart';
-import '../../../utils/utils.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../../model/quote_model.dart';
+import '../../../services/api_service.dart';
+import '../../../utils/utils.dart';
+import 'quotes_event.dart';
+import 'quotes_state.dart';
+
 class QuotesBloc extends Bloc<QuotesEvent, QuotesState> {
-  QuotesBloc() : super(QuotesInitialState()) {
+  final bool isFavorite;
+  QuotesBloc(this.isFavorite) : super(QuotesInitialState()) {
     on<GetAllQuotesEvent>(_getAllQuotesEvents);
     on<GetAllQuotesByPaginationEvent>(_getAllQuotesByPagination);
     on<SearchQuotesEvent>(
@@ -25,7 +22,6 @@ class QuotesBloc extends Bloc<QuotesEvent, QuotesState> {
       transformer: debouce(Durations.medium3),
     );
     on<SaveRemoveQuotesEvent>(_saveRemoveQuotesEvent);
-    on<ShareQuoteEvent>(_shareQuoteEvent);
     on<GetFavotireQuotesEvent>(_loadFavoriteQuotes);
   }
 
@@ -142,46 +138,24 @@ class QuotesBloc extends Bloc<QuotesEvent, QuotesState> {
         savedQuotes.removeWhere((e) => e.id == quote.id);
         await Utils.saveQuotes(savedQuotes);
         // log(jsonEncode(Utils.getSavedQuotes().map((e) => e.toJson()).toList()));
-        emit(QuotesRemovedState(quotes: List.from(allQuotes)));
+        if (isFavorite) {
+          emit(QuotesRemovedState(quotes: List.from(savedQuotes)));
+        } else {
+          emit(QuotesRemovedState(quotes: List.from(allQuotes)));
+        }
       } else {
         savedQuotes.add(quote);
         await Utils.saveQuotes(savedQuotes);
         // log(jsonEncode(Utils.getSavedQuotes().map((e) => e.toJson()).toList()));
-        emit(QuotesSavedState(quotes: List.from(allQuotes)));
+        if (isFavorite) {
+          emit(QuotesSavedState(quotes: List.from(savedQuotes)));
+        } else {
+          emit(QuotesSavedState(quotes: List.from(allQuotes)));
+        }
       }
     } catch (e) {
       log('Error while saving removing quotes $e');
     }
-  }
-
-  //shareQuotes
-  void _shareQuoteEvent(
-    ShareQuoteEvent event,
-    Emitter<QuotesState> emit,
-  ) async {
-    final key = event.globalKey;
-    //wait till the frame is fully painted
-    await WidgetsBinding.instance.endOfFrame;
-    //find the widget to take a picture of by globalkey
-    final boundry =
-        key.currentContext!.findRenderObject() as RenderRepaintBoundary;
-    //take the screenshot of the widget
-    final image = await boundry.toImage(pixelRatio: 3.0);
-    //turn the image into pnyByte
-    final byteData = await image.toByteData(format: ImageByteFormat.png);
-    //get the rawData form the image
-    final pngByte = byteData!.buffer.asUint8List();
-    //find the place to save the image
-    final directory = await getTemporaryDirectory();
-    //decide the filapath
-    final filePath = '${directory.path}/quotes.png';
-    //save the file
-    final file = File(filePath);
-    file.writeAsBytes(pngByte);
-    //share the image
-    SharePlus.instance.share(
-      ShareParams(files: [XFile(filePath)], text: 'Check out this quote !!'),
-    );
   }
 
   //load favotires quotes

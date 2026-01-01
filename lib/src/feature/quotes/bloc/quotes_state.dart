@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:quotes_app_bloc/src/feature/quotes/model/quote_model.dart';
+import 'package:quotes_app_bloc/src/model/quote_model.dart';
 
 abstract interface class QuotesState extends Equatable {
   final List<QuoteModel> quotes;

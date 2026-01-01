@@ -32,33 +32,28 @@ class _FavoriteQuotesState extends State<FavoriteQuotes> {
           if (state is QuotesFailureState) {
             return Center(child: Text(state.message));
           }
-          if (state is QuotesLoadedState) {
-            final quotes = state.quotes;
-            return ListView.builder(
-              itemCount: quotes.length,
-              itemBuilder: (context, index) {
-                final shareKey = GlobalKey();
-                final quote = quotes[index];
-                return RepaintBoundary(
-                  key: shareKey,
-                  child: QuotesCard(
-                    quote: quote,
-                    onSave: () {
-                      context.read<QuotesBloc>().add(
-                        SaveRemoveQuotesEvent(quote),
-                      );
-                    },
-                    onShare: () {
-                      context.read<QuotesBloc>().add(
-                        ShareQuoteEvent(globalKey: shareKey),
-                      );
-                    },
-                  ),
-                );
-              },
-            );
-          }
-          return SizedBox.shrink();
+          // if (state is QuotesLoadedState) {
+          final quotes = state.quotes;
+          return ListView.builder(
+            itemCount: quotes.length,
+            itemBuilder: (context, index) {
+              final shareKey = GlobalKey();
+              final quote = quotes[index];
+              return RepaintBoundary(
+                key: shareKey,
+                child: QuotesCard(
+                  quote: quote,
+                  onSave: () {
+                    context.read<QuotesBloc>().add(
+                      SaveRemoveQuotesEvent(quote),
+                    );
+                  },
+                  onShare: () {},
+                ),
+              );
+            },
+          );
+          // }
         },
         listener: (context, state) {
           if (state is QuotesSavedState) {

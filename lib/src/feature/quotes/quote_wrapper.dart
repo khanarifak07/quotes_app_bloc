@@ -10,7 +10,7 @@ class QuoteWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => QuotesBloc()..add(GetAllQuotesByPaginationEvent()),
+      create: (_) => QuotesBloc(false)..add(GetAllQuotesByPaginationEvent()),
       child: Quotes(),
     );
   }

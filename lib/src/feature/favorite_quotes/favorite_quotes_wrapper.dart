@@ -8,6 +8,6 @@ class FavoriteQuotesWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (_) => QuotesBloc(), child: FavoriteQuotes());
+    return BlocProvider(create: (_) => QuotesBloc(true), child: FavoriteQuotes());
   }
 }

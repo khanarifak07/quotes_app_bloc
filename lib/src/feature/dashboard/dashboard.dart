@@ -32,9 +32,6 @@ class _DashboardState extends State<Dashboard> {
         elevation: 10,
         currentIndex: currentIndex,
         onTap: (value) {
-          if (value == 2) {
-            print('Favorite');
-          }
           // if (value == 2) {
           //   favoriteKey = UniqueKey();
           // }

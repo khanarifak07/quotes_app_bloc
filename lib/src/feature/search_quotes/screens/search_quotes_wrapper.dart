@@ -10,7 +10,7 @@ class SearchQuotesWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => QuotesBloc()..add(GetAllQuotesEvent()),
+      create: (_) => QuotesBloc(false)..add(GetAllQuotesEvent()),
       child: SearchQuotes(),
     );
   }

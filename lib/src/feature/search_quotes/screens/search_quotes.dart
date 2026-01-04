@@ -15,15 +15,17 @@ class SearchQuotes extends StatelessWidget {
       appBar: AppBar(title: Text('S E A R C H')),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: searchCtrl,
-              onChanged: (value) =>
-                  context.read<QuotesBloc>().add(SearchQuotesEvent(value)),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter 3 characters to search...',
+          Material(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: searchCtrl,
+                onChanged: (value) =>
+                    context.read<QuotesBloc>().add(SearchQuotesEvent(value)),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter 3 characters to search...',
+                ),
               ),
             ),
           ),
